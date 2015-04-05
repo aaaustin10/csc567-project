@@ -1,11 +1,14 @@
 package com.example.austin.clipboardsync;
 
 import android.content.ClipData;
+import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -14,11 +17,25 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //ClipboardManager c = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        //ClipData.Item item = c.getPrimaryClip().getItemAt(0);
-        //System.out.println(item.getText());
     }
 
+    public String read_clipboard(View view) {
+        String clipboard_contents = null;
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        if (clipboard.hasPrimaryClip() && clipboard.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+            ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
+            clipboard_contents = item.getText().toString();
+        }
+
+        // if information retrieved
+        if (clipboard_contents != null) {
+            Toast.makeText(this, clipboard_contents, Toast.LENGTH_LONG).show();
+            return clipboard_contents;
+        } else {
+            Toast.makeText(this, "No text on clipboard", Toast.LENGTH_LONG).show();
+        }
+        return null;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
