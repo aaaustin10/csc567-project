@@ -11,6 +11,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -31,7 +38,7 @@ public class MainActivity extends ActionBarActivity {
         // if information retrieved
         if (clipboard_contents != null) {
             Toast.makeText(this, clipboard_contents, Toast.LENGTH_LONG).show();
-            new DownloadImageTask().execute("http://www.google.com/");
+            new ClipboardNetworkTask().execute("http://www.google.com/");
             return clipboard_contents;
         } else {
             Toast.makeText(this, "No text on clipboard", Toast.LENGTH_LONG).show();
@@ -39,9 +46,24 @@ public class MainActivity extends ActionBarActivity {
         return null;
     }
 
-    private class DownloadImageTask extends AsyncTask<String, String, String> {
+    private class ClipboardNetworkTask extends AsyncTask<String, String, String> {
         protected String doInBackground(String... urls) {
             System.out.println((urls[0]));
+            HttpURLConnection urlConnection = null;
+            try {
+                URL url = new URL("http://www.android.com/");
+                urlConnection = (HttpURLConnection) url.openConnection();
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                System.out.println(urlConnection.getResponseCode());
+            } catch (MalformedURLException e) {
+
+            } catch (IOException e) {
+
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
             return urls[0];
         }
 
