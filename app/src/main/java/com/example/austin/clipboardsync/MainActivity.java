@@ -3,6 +3,7 @@ package com.example.austin.clipboardsync;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -30,11 +31,23 @@ public class MainActivity extends ActionBarActivity {
         // if information retrieved
         if (clipboard_contents != null) {
             Toast.makeText(this, clipboard_contents, Toast.LENGTH_LONG).show();
+            new DownloadImageTask().execute("http://www.google.com/");
             return clipboard_contents;
         } else {
             Toast.makeText(this, "No text on clipboard", Toast.LENGTH_LONG).show();
         }
         return null;
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, String, String> {
+        protected String doInBackground(String... urls) {
+            System.out.println((urls[0]));
+            return urls[0];
+        }
+
+        protected void onPostExecute(String result) {
+            System.out.println(result);
+        }
     }
 
     @Override
