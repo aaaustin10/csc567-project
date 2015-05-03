@@ -19,8 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
+import java.security.Key;
 import java.util.ArrayList;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -38,7 +41,7 @@ public class MainActivity extends ActionBarActivity {
         clips = new ArrayList<>();
         list.setAdapter(adapter);
         clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        clip_client = new ClipManager(getString(R.string.server_url));
+        clip_client = new ClipManager(getString(R.string.server_url), "somekey");
         adapter.fetch_clips();
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -66,7 +69,11 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void paste_button(View view) {
-        new net_sync().execute(true);
+        new NetSync().execute(true);
+    }
+
+    public void fetch_button(View view) {
+        new NetSync().execute(false);
     }
 
     @Override
@@ -94,7 +101,7 @@ public class MainActivity extends ActionBarActivity {
     public class ClipAdapter extends BaseAdapter {
 
         public void fetch_clips() {
-            new net_sync().execute();
+            new NetSync().execute();
         }
 
         public int getCount() {
@@ -122,8 +129,9 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    class net_sync extends AsyncTask<Boolean, String, ArrayList<Clip>> {
+    class NetSync extends AsyncTask<Boolean, String, ArrayList<Clip>> {
         boolean is_paste = false;
+        boolean not_text = false;
 
         protected ArrayList<Clip> doInBackground(Boolean... args) {
             boolean is_paste = false;
@@ -133,6 +141,10 @@ public class MainActivity extends ActionBarActivity {
             this.is_paste = is_paste;
 
             if (is_paste) {
+                if (read_clipboard() == null) {
+                    not_text = true;
+                    return null;
+                }
                 return clip_client.paste(read_clipboard());
             } else {
                 return clip_client.get_clips(-1, -1);
@@ -140,6 +152,10 @@ public class MainActivity extends ActionBarActivity {
         }
 
         protected void onPostExecute(ArrayList<Clip> result) {
+            if (not_text) {
+                Toast.makeText(MainActivity.this, "There is no text on the clipboard.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             if (result != null) {
                 if (is_paste) {
                     clips.add(0, result.get(0));

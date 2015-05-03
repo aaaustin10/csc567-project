@@ -4,6 +4,6 @@
     <string name="server_url">http://192.168.1.101:8000/clipboard</string>
 
     <string name="paste_button">Paste</string>
-    <string name="copy_button">Copy</string>
+    <string name="fetch_button">Fetch</string>
     <string name="action_settings">Settings</string>
 </resources>

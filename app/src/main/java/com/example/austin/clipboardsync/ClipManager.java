@@ -29,14 +29,16 @@ import java.util.ArrayList;
 
 public class ClipManager {
     String server_url = null;
+    Encrypter encrypter;
 
     ArrayList<Clip> get_clips(int start, int end) {
         NetTaskDescription task = new NetTaskDescription(server_url, true, start, end);
         return handle_network(task);
     }
 
-    ClipManager(String url) {
+    ClipManager(String url, String key) {
         server_url = url;
+        encrypter = new Encrypter(key);
     }
 
     ArrayList<Clip> paste(String contents) {
@@ -76,7 +78,7 @@ public class ClipManager {
         JSONObject response = new JSONObject();
         String json_string = "";
         try {
-            response.put("contents", contents);
+            response.put("contents", encrypter.encrypt(contents));
             response.put("owner_id", 1);
             json_string = response.toString();
         } catch (JSONException e) {
@@ -170,7 +172,7 @@ public class ClipManager {
             if (name.equals("timestamp")) {
                 clip.timestamp = reader.nextString();
             } else if (name.equals("contents")) {
-                clip.text = reader.nextString();
+                clip.text = encrypter.decrypt(reader.nextString());
             } else if (name.equals("owner_id")) {
                 clip.owner_id = reader.nextLong();
             } else if (name.equals("item_pk")) {
