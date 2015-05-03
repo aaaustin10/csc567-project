@@ -11,11 +11,12 @@
         android:layout_height="wrap_content"
         android:onClick="paste_button" />
 
-    <Button android:id="@+id/copy_button"
-        android:text="@string/copy_button"
-        android:layout_width="wrap_content"
+    <ListView
+        android:id="@+id/list_view_main"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="copy_button"
-        android:layout_toRightOf="@+id/paste_button"/>
+        android:layout_below="@id/paste_button">
+
+</ListView>
 
 </RelativeLayout>
