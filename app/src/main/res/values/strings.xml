@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Clipboard Sync</string>
 
-    <string name="server_url">http://austin-ubuntu-laptop:8000/</string>
+    <string name="server_url">http://192.168.1.101:8000/clipboard</string>
 
     <string name="paste_button">Paste</string>
     <string name="copy_button">Copy</string>
