@@ -17,10 +17,12 @@ import org.json.JSONObject;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -33,6 +35,8 @@ public class Preferences extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
+        ((TextView) findViewById(R.id.username_field)).setText(MainActivity.username);
+        ((TextView) findViewById(R.id.password_field)).setText(MainActivity.password);
     }
 
     @Override
@@ -61,6 +65,12 @@ public class Preferences extends ActionBarActivity {
         new NetTask().execute();
     }
 
+    // courtesy of 'Pavel Repin' from stack overflow
+    static String convertStreamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
+
     int do_post(HttpURLConnection urlConnection, String username, String password) throws IOException {
         urlConnection.setDoOutput(true);
         urlConnection.setRequestProperty("Content-Type", "application/json");
@@ -87,22 +97,7 @@ public class Preferences extends ActionBarActivity {
         out.write(buffer);
         out.flush();
 
-        InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-        ByteArrayOutputStream baos = new ByteArrayOutputStream( );
-        byte[] in_buffer;
-        do {
-            int bytes_ready = in.available();
-            in_buffer = new byte[bytes_ready];
-            in.read(in_buffer);
-            baos.write(in_buffer);
-            in_buffer = baos.toByteArray();
-        } while (in_buffer[in_buffer.length - 1] != 0);
-        byte[] iter_buffer = baos.toByteArray();
-        in_buffer = new byte[in_buffer.length - 1]; // -1 to get rid of null byte
-        for (int i = 0; i < in_buffer.length; i++) {
-            in_buffer[i] = iter_buffer[i];
-        }
-        return Integer.parseInt(new String(in_buffer));
+        return Integer.parseInt(convertStreamToString(urlConnection.getInputStream()));
     }
 
     Integer GetOrCreateLogin () {

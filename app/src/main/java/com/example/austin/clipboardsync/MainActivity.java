@@ -70,6 +70,12 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.fetch_clips();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
@@ -120,6 +126,8 @@ public class MainActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, Preferences.class);
+            startActivity(intent);
             return true;
         }
 

@@ -19,6 +19,7 @@ public class Encrypter {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(plain_key.getBytes());
+            //System.out.println(byteArrayToHex(md.digest()));
             aes_key = new SecretKeySpec(md.digest(), "AES");
             cipher = Cipher.getInstance("AES");
         } catch (Exception e) {
@@ -26,7 +27,7 @@ public class Encrypter {
         }
     }
 
-    // courtesy of pointer null on stack overflow
+    // courtesy of 'pointer null' on stack overflow
     public static String byteArrayToHex(byte[] a) {
         StringBuilder sb = new StringBuilder(a.length * 2);
         for(byte b: a)
