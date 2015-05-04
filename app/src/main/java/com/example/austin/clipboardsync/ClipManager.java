@@ -79,7 +79,7 @@ public class ClipManager {
         String json_string = "";
         try {
             response.put("contents", encrypter.encrypt(contents));
-            response.put("owner_id", 1);
+            response.put("owner_id", MainActivity.owner_id);
             json_string = response.toString();
         } catch (JSONException e) {
             System.out.println(e);
@@ -130,6 +130,7 @@ public class ClipManager {
             if (task.amount != -1) {
                 adapted_url += "&amount=" + Integer.toString(task.amount);
             }
+            adapted_url += "&owner_id=" + Integer.toString(MainActivity.owner_id);
             URL url = new URL(adapted_url);
             urlConnection = (HttpURLConnection) url.openConnection();
 

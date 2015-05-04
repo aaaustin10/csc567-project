@@ -4,6 +4,8 @@ import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -27,6 +29,10 @@ import javax.crypto.spec.SecretKeySpec;
 
 
 public class MainActivity extends ActionBarActivity {
+    public static final String PREFS_FILE = "Preferences";
+    public static String username;
+    public static String password;
+    public static int owner_id = -1;
     static ArrayList<Clip> clips;
     ClipboardManager clipboard = null;
     ClipManager clip_client = null;
@@ -36,6 +42,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // set up adapter
         adapter = new ClipAdapter();
         ListView list = (ListView) findViewById(R.id.list_view_main);
         clips = new ArrayList<>();
@@ -50,6 +57,27 @@ public class MainActivity extends ActionBarActivity {
                 write_clipboard(c.text);
             }
         });
+
+        // load preferences
+        SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
+        username = settings.getString("username", "");
+        password = settings.getString("password", "");
+        owner_id = settings.getInt("owner_id", -1);
+        if (username.equals("")) {
+            Intent intent = new Intent(this, Preferences.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("username", username);
+        editor.putString("password", password);
+        editor.putInt("owner_id", owner_id);
+        editor.apply();
     }
 
     String read_clipboard() {
