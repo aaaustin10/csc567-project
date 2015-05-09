@@ -19,7 +19,6 @@ public class Encrypter {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(plain_key.getBytes());
-            //System.out.println(byteArrayToHex(md.digest()));
             aes_key = new SecretKeySpec(md.digest(), "AES");
             cipher = Cipher.getInstance("AES");
         } catch (Exception e) {

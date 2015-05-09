@@ -20,12 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
-import java.security.Key;
 import java.util.ArrayList;
-
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -48,8 +43,6 @@ public class MainActivity extends ActionBarActivity {
         clips = new ArrayList<>();
         list.setAdapter(adapter);
         clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        clip_client = new ClipManager(getString(R.string.server_url), "somekey");
-        adapter.fetch_clips();
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -72,6 +65,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        clip_client = new ClipManager(getString(R.string.server_url), password);
         adapter.fetch_clips();
     }
 
