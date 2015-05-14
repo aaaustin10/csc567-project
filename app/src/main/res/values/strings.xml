@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Clipboard Sync</string>
 
-    <string name="server_url">http://146.7.36.105:8000/clipboard</string>
-    <string name="login_url">http://146.7.36.105:8000/login</string>
+    <string name="server_url">http://austinfstewart.com:8000/clipboard</string>
+    <string name="login_url">http://austinfstewart.com:8000/login</string>
 
     <string name="paste_button">Paste</string>
     <string name="fetch_button">Fetch</string>
